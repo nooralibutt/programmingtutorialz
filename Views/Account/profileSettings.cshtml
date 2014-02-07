@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "Profile Settings";
+    ViewBag.showNavigation = false;
+}
+@model ProgrammingTutorialz.Models.User
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+@Scripts.Render("~/bundles/jquery")
+<script>
+    $(document).ready(function () {
+        $('#save').click(function () {
+            if ($('#confirmPassword').val() != $('#password').val()) {
+                $('#error_confirmPassword').html("confirm password is not same as password!");
+                return false;
+            }
+            else
+                $('#error_confirmPassword').html("");
+        });
+    });
+</script>
+
+<form class="form-horizontal" action="/Account/editUser" method="post" enctype="multipart/form-data">
+
+    <!-- for jquery server side form verification -->
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+<fieldset>
+    <!-- Form Name -->
+    <legend>Profile Settings</legend>
+
+    @{
+        //displaying serverside error message
+        if(ViewBag.error != null){
+            <text>
+            <div class="form-group">
+            <div class="col-sm-12 col-md-12">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                        ×</button>
+                    <span class="glyphicon glyphicon-hand-right"></span><strong>&nbsp;Profile Settings Error</strong>
+                    <hr class="message-inner-separator">
+                    @ViewBag.error
+                </div>
+            </div>
+            </div>
+            </text>
+        }
+        //displaying serverside success message
+        if(ViewBag.success != null)
+        {
+        <text>
+        <div class="form-group">
+            <div class="col-sm-12 col-md-12">
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                        ×</button>
+                    <span class="glyphicon glyphicon-ok"></span><strong>Profile Settings Success</strong>
+                    <hr class="message-inner-separator">
+                    <p>
+                        @ViewBag.success
+                    </p>
+                </div>
+            </div>
+        </div>
+        </text>
+        }
+    }
+    <!-- Text input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="name">Name</label>  
+      <div class="col-md-4">
+        @Html.TextBoxFor(model => model.Name, new { id="name", type="text", placeholder="e.g. Richard David", @class="form-control input-md", required="", autofocus=""})
+        @Html.ValidationMessageFor(model => model.Name)
+      </div>
+    </div>
+
+    <!-- profile Picture-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="profilePic">Profile Picture</label>  
+      <div class="col-md-4">
+        <input id="profilePic" name="profilePic" type="file" class="form-control input-md" />
+      </div>
+    </div>
+
+    <!-- Text input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="email">Email</label>  
+      <div class="col-md-4">
+          @Html.TextBoxFor(model => model.email, new { id="email", type="email", placeholder="e.g. example@domain.com", @class="form-control input-md", @readonly="readonly"})
+          @Html.ValidationMessageFor(model => model.email)
+      </div>
+    </div>
+
+    <!-- Old Password input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="oldPassword">Old Password</label>
+      <div class="col-md-4">
+         <input id="oldPassword" name="oldPassword" type="password" placeholder="Old Password" class="form-control input-md" required />
+      </div>
+    </div>
+
+    <!-- New Password input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="password">Password</label>
+      <div class="col-md-4">
+        <input id="password" name="password" type="password" placeholder="Password" class="form-control input-md" required />
+         @Html.ValidationMessageFor(model => model.password)
+      </div>
+    </div>
+
+    <!-- Confirm Password input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="confirmPassword">Confirm Password</label>
+      <div class="col-md-4">
+        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm Password" class="form-control input-md" required="">
+        <span id="error_confirmPassword" class="field-validation-error"></span>
+      </div>
+    </div>
+
+        <!-- Button (Double) -->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="save"></label>
+      <div class="col-md-8">
+          <input type="submit" id="save" name="save" class="btn btn-success" value="Save"/>
+          <a id="cancel" class="btn btn-info" href="/Home/Index">Cancel</a>
+      </div>
+    </div>
+
+</fieldset>
+</form>
+
+
