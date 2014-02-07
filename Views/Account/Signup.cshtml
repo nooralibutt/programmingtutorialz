@@ -1,0 +1,158 @@
+﻿@model ProgrammingTutorialz.Models.User
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+@{
+    ViewBag.Title = "Sign Up";
+    ViewBag.showNavigation = false;
+}
+
+@Scripts.Render("~/bundles/jquery")
+<script>
+    $(document).ready(function () {
+        $('#checkEmailBut').click(function () {
+            var email = $('#email').val();
+            if (!isEmail(email)) {
+                $('#result').html("<div class=\"alert alert-danger\">Please specify an email address.</div>");
+                return;
+            }
+            $('#result').html("");
+            $.getJSON("/Account/isEmailExist?email=" + email, function (data) {
+                if (data) {
+                    $('#result').html("<div class=\"alert alert-danger\">Email already exist. Please try another!</div>");
+                }
+                else {
+                    $('#result').html("<div class=\"alert alert-success\">Email is Available.</div>");
+                }
+            });
+
+        });
+        $('#signup').click(function () {
+            if ($('#confirmPassword').val() != $('#password').val()) {
+                $('#error_confirmPassword').html("confirm password is not same as password!");
+                return false;
+            }
+            else
+                $('#error_confirmPassword').html("");
+        });
+    });
+
+    function isEmail(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@@\"]+(\.[^<>()[\]\\.,;:\s@@\"]+)*)|(\".+\"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
+</script>
+
+<h1>Welcome to Signup Page</h1>
+
+<form class="form-horizontal" action="/Account/saveUser" method="post" enctype="multipart/form-data">
+
+    <!-- for jquery server side form verification -->
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+<fieldset>
+    <!-- Form Name -->
+    <legend>Signup</legend>
+    
+    <!-- for printing result of check email button-->
+    <div class="form-group">
+        <div class="col-sm-12 col-md-12" id="result">
+        </div>
+    </div>
+
+    @{
+        //displaying serverside error message
+        if(ViewBag.error != null){
+            <text>
+            <div class="form-group">
+            <div class="col-sm-12 col-md-12">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                        ×</button>
+                    <span class="glyphicon glyphicon-hand-right"></span><strong>&nbsp;Sign Up Error</strong>
+                    <hr class="message-inner-separator">
+                    @ViewBag.error
+                </div>
+            </div>
+            </div>
+            </text>
+        }
+        //displaying serverside success message
+        if(ViewBag.success != null)
+        {
+        <text>
+        <div class="form-group">
+            <div class="col-sm-12 col-md-12">
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                        ×</button>
+                    <span class="glyphicon glyphicon-ok"></span><strong>Sign Up Success</strong>
+                    <hr class="message-inner-separator">
+                    <p>
+                        @ViewBag.success
+                    </p>
+                </div>
+            </div>
+        </div>
+        </text>
+        }
+    }
+    <!-- Text input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="name">Name</label>  
+      <div class="col-md-4">
+        @Html.TextBoxFor(model => model.Name, new { id="name", type="text", placeholder="e.g. Richard David", @class="form-control input-md", required="", autofocus=""})
+        @Html.ValidationMessageFor(model => model.Name)
+      </div>
+    </div>
+
+    <!-- profile Picture-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="profilePic">Profile Picture</label>  
+      <div class="col-md-4">
+        <input id="profilePic" name="profilePic" type="file" class="form-control input-md" />
+      </div>
+    </div>
+
+    <!-- Text input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="email">Email</label>  
+      <div class="col-md-4">
+          @Html.TextBoxFor(model => model.email, new { id="email", type="email", placeholder="e.g. example@domain.com", @class="form-control input-md", required=""})
+          @Html.ValidationMessageFor(model => model.email)
+      </div>
+        <a id="checkEmailBut" class="btn btn-info" href="#">check Email</a>
+    </div>
+
+    <!-- Password input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="password">Password</label>
+      <div class="col-md-4">
+         @Html.TextBoxFor(model => model.password, new { id="password", type="password", placeholder="Password", @class="form-control input-md", required=""})
+         @Html.ValidationMessageFor(model => model.password)
+      </div>
+    </div>
+
+    <!-- Password input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="confirmPassword">Confirm Password</label>
+      <div class="col-md-4">
+        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm Password" class="form-control input-md" required="">
+        <span id="error_confirmPassword" class="field-validation-error"></span>
+      </div>
+    </div>
+
+        <!-- Button (Double) -->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="signup"></label>
+      <div class="col-md-8">
+          <input type="submit" id="signup" name="signup" class="btn btn-success" value="signup"/>
+          <a id="login" class="btn btn-info" href="/Account/login">login</a>
+      </div>
+    </div>
+
+</fieldset>
+</form>
+
+

@@ -1,0 +1,57 @@
+﻿html, body {
+    height: 100%;
+}
+
+#wrap {
+    min-height: 100%;
+}
+
+#main {
+    padding-bottom: 150px; /* this needs to be bigger than footer height*/
+}
+
+#left-nav a {
+    color: #000000;
+    background-color: #F0F8FF;
+    text-decoration: none;
+    display: block;
+    border: 1px solid #e5e5e5;
+    margin-top: 1px;
+    padding: 2px;
+    text-transform: capitalize;
+}
+
+#left-nav a:hover {
+    background-color: white;
+}
+
+.selected{
+    font-weight: bold;
+    color: rgb(171, 221, 47);
+}
+
+footer {
+    position: relative;
+    margin-top: -150px; /* negative value of footer height */
+    height: 150px;
+    clear: both;
+    padding-top: 20px;
+    text-align: center;
+    background: #545453;
+    color: white;
+}
+
+footer a {
+    text-transform: uppercase;
+    color: white;
+    padding-top: 1em;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: #f2f2f2;
+}
+
+.field-validation-error {
+    color: red;
+}

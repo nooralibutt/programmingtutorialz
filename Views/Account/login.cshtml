@@ -1,0 +1,88 @@
+﻿@model ProgrammingTutorialz.Models.User
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+@{
+    ViewBag.Title = "Login";
+    ViewBag.showNavigation = false;
+}
+
+<h1>Welcome to Login Page</h1>
+<section>
+<form class="form-horizontal" method="post" action="/Account/verifyUser">
+    
+    <!-- for jquery server side form verification -->
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        <!-- Form Name -->
+        <legend>Login</legend>
+
+        @{
+        //displaying serverside error message
+        if(ViewBag.error != null){
+            <text>
+            <div class="form-group">
+            <div class="col-sm-12 col-md-12">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                        ×</button>
+                    <span class="glyphicon glyphicon-hand-right"></span><strong>&nbsp;Login Error</strong>
+                    <hr class="message-inner-separator">
+                    @ViewBag.error
+                </div>
+            </div>
+            </div>
+            </text>
+        }
+        }
+        <!-- for remember me perpose -->
+        <input name="_token" type="hidden" value="@Session.SessionID">
+
+        <!-- Text input-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="email">Email</label>  
+          <div class="col-md-5">
+            @Html.TextBoxFor(model => model.email, new { id="email", type="email", placeholder="e.g. example@domain.com", @class="form-control input-md", autofocus=""})
+            @Html.ValidationMessageFor(model => model.email)
+          </div>
+        </div>
+
+        <!-- Password input-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="password">Password</label>
+          <div class="col-md-5">
+            @Html.TextBoxFor(model => model.password, new { id="password", type="password", placeholder="Password", @class="form-control input-md", required=""})
+            @Html.ValidationMessageFor(model => model.password)
+          </div>
+        </div>
+
+        <!-- Multiple Checkboxes -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="rememberme"></label>
+          <div class="col-md-5">
+          <div class="checkbox">
+            <label for="rememberme-0">
+              <input type="checkbox" name="rememberme" id="rememberme-0" value="1">
+              Remember me
+            </label>
+              @Html.ActionLink("forgot password?", "forgotPassword", "Account", null, new { @class="pull-right" })
+	        </div>
+          </div>
+        </div>
+
+        <!-- Button -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="login"></label>
+          <div class="col-md-5">
+            <input type="submit" id="login" name="login" class="btn btn-info btn-lg btn-block" value="login"/>
+          </div>
+        </div>
+            <br />
+        <p class="text-center">
+            @Html.ActionLink("Register for an account?", "Signup", "Account")
+        </p>
+    </fieldset>
+</form>
+</section>

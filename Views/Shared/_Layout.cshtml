@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="~/images/logo.ico" />
+    <link rel="stylesheet" type="text/css" media="all" href="~/Bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="~/css/general.css" />
+    <!-- to support older versions like I.E 8 we use respond.js -->
+    <script src="~/Bootstrap/js/respond.min.js"></script>
+
+    @Scripts.Render("~/bundles/jquery")
+    <script>
+        $(document).ready(function () {
+
+            //rendering articles through javascript
+            $('#left-nav a').click(function (e) {
+                e.preventDefault();
+                var id = e.target.getAttribute('href');
+                $.getJSON("/Home/renderPage/" + id, function (data) {
+                    if (data != null) {
+                        $('#errorSaveArticle').html("");
+                        $('#pId').attr("value", id);
+                        $('#page').html(data);
+                    }
+                });
+            });
+
+            //showing error if page is not selected while posting new article
+            $('#saveArticle').click(function (e) {
+                if ($('#pId').attr("value") == "") {
+                    e.preventDefault();
+                    $('#errorSaveArticle').html("<div class=\"alert alert-danger\">Please select some "
+                        + "page under which you want to write tutorial!</div>");
+                }
+            });
+
+            //getting search bar results through javascript
+            $('#searchButton').click(function (e) {
+                e.preventDefault();
+                $('#searchResultTitle').text($('#searchText').val());
+                if ($('#searchText').val() == "") {
+                    alert("Please specify some text in search field.");
+                    return false;
+                }
+                $.getJSON("/Home/search/?tags=" + encodeURIComponent($('#searchText').val()), function (data) {
+                    if (data != null && data != "") {
+                        $('#searchResultBody').html(data);
+                    }
+                    else {
+                        $('#searchResultBody').html("<p>No results found.</p>");
+                    }
+                });
+                $('#myModal').modal('show');
+            });
+        });
+    </script>
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+
+    <!-- Master Navigation -->
+    <div class="navbar navbar-inverse">
+        <div class="container">
+            <ul class="nav navbar-nav">
+                <li class="@if (ViewBag.Title == "Programming Tutorialz")
+                           { <text> active</text> }">
+                    <a href="/Home/Index"><span class="glyphicon glyphicon-home"></span>&nbsp;Home</a></li>
+                <li class="@if (ViewBag.Title == "Contact Us")
+                           { <text> active</text> }">
+                    <a href="/Home/contactus"><span class="glyphicon glyphicon-envelope"></span>&nbsp;Contact us</a></li>
+            </ul>
+            <!-- Search Bar -->
+            <form class="navbar-form navbar-left" action="/Home/search" method="get" id="search-form" role="search">
+                <div class="form-group form-slide" style="overflow: hidden;">
+                    <input id="searchText" type="text" class="form-control form-input-slide" name="search" placeholder="Search" style="margin-left: 0px;" />
+                </div>
+                <button type="submit" class="btn btn-default search-btn" id="searchButton"><span class="glyphicon glyphicon-search"></span></button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+
+                @if (Session["user"] == null)
+                {
+                    <li id="nav-register-btn" class="@if (ViewBag.Title == "Sign Up")
+                                                     { <text> active</text> }">
+                        <a href="/Account/Signup">Register</a></li>
+                    <li id="nav-login-btn" class="@if (ViewBag.Title == "Login")
+                                                  { <text> active</text> }">
+                        <a href="/Account/login"><i class="icon-login"></i>Login</a></li>
+                }
+                else
+                {
+
+                    ViewBag.name = ((ProgrammingTutorialz.Models.User)Session["user"]).Name;
+                       
+                    <li class="setting ">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span>&nbsp;@ViewBag.name</a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="/Account/profileSettings"><span class="glyphicon glyphicon-wrench"></span>&nbsp;Profile Settings</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="/Account/logout"><span class="glyphicon glyphicon-off"></span>&nbsp;logout</a></li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div id="wrap">
+        <div id="main" class="container">
+
+            <!-- Programming Tutorialz logo -->
+            <aside style="padding-bottom: 20px;">
+                <a href="http://www.programmingtutorialz.com">
+                    <img src="~/images/programmingtutorialzlogo.png" alt="programmingtutorialz.com" style="margin-top: 10px;" /></a>
+            </aside>
+
+            @{
+                if (ViewBag.showNavigation != null && ViewBag.showNavigation)
+                {
+                <text>
+                <!-- header -->
+                <header id="header">
+                    <ul class="nav nav-tabs">
+                        @Html.Raw(ViewBag.technologies)
+                    </ul>
+                </header>
+                <div class="row">
+                    <!-- body -->
+                    <div class="col-md-3">
+                        <div class="bs-sidebar">
+                            <!-- Left navigation -->
+                            <ul class="nav" id="left-nav">
+                                @if (ViewBag.left_nav != null)
+                                {
+                                    @Html.Raw(ViewBag.left_nav);
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-9" role="main">
+                        <p>@RenderBody()</p>
+                    </div>
+                </div>
+                </text>
+                }
+                else
+                {
+                <p>@RenderBody()</p>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- Search Dialog Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="searchResultTitle">Search Result</h4>
+                </div>
+                <div class="modal-body" id="searchResultBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer">
+        <a href="error.html">report error</a>
+        <span>| </span>
+        <a href="error.html">contact</a>
+        <span>| </span>
+        <a href="error.html">join us</a>
+        <span>| </span>
+        <a href="error.html">about</a>
+        <span>| </span>
+        <a href="https://www.facebook.com/programmingtutorialzcom">facebook</a>
+        <br />
+        <p style="margin-top: 13px;">&copy; programmingtutorialz.com All rights reserved</p>
+    </footer>
+
+    <!-- javascript -->
+    <script src="~/Bootstrap/js/bootstrap.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

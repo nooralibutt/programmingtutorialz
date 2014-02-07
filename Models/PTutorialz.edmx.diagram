@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3e541799146145ed9e25aa92ad66a06f" Name="Diagram1">
+        <EntityTypeShape EntityType="programmingtutorialzModel.Page" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="programmingtutorialzModel.Subject" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="programmingtutorialzModel.Technology" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="programmingtutorialzModel.User" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <AssociationConnector Association="programmingtutorialzModel.FK_Pages_ToSubjects" ManuallyRouted="false" />
+        <AssociationConnector Association="programmingtutorialzModel.FK_Subjects_ToTechnologies" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="programmingtutorialzModel.Article" Width="1.5" PointX="4.25" PointY="5" />
+        <EntityTypeShape EntityType="programmingtutorialzModel.ArticleTag" Width="1.5" PointX="7.125" PointY="5.375" />
+        <EntityTypeShape EntityType="programmingtutorialzModel.Tag" Width="1.5" PointX="9.5" PointY="3.625" />
+        <AssociationConnector Association="programmingtutorialzModel.FK_Articles_ToPages" />
+        <AssociationConnector Association="programmingtutorialzModel.FK_ArticleTag_ToArticle" />
+        <AssociationConnector Association="programmingtutorialzModel.FK_ArticleTag_ToTag" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
