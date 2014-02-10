@@ -1,9 +1,15 @@
-﻿@{
+﻿@model ProgrammingTutorialz.Models.ViewModel.MessageMetaData
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+@{
     ViewBag.Title = "Contact Us";
     ViewBag.showNavigation = false;
 }
 
-<br /><br />
+@Scripts.Render("~/bundles/jquery")
+<br />
+<br />
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
@@ -17,16 +23,62 @@
         </div>
 
         <div class="col-sm-6 contact-form">
-            <form id="contact" method="post" class="form" role="form">
+            <form id="contact" method="post" class="form" action="/Home/saveMessage">
+
+                @{
+                    //displaying serverside error message
+                    if (ViewBag.error != null)
+                    {
+                    <text>
+                    <div class="form-group">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="alert alert-danger">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                                    ×</button>
+                                <span class="glyphicon glyphicon-hand-right"></span><strong>&nbsp;Contact Us Error(s)</strong>
+                                <hr class="message-inner-separator">
+                                @ViewBag.error
+                            </div>
+                        </div>
+                    </div>
+                    </text>
+                    }
+                    //displaying serverside success message
+                    if (ViewBag.success != null)
+                    {
+                    <text>
+                    <div class="form-group">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                                    ×</button>
+                                <span class="glyphicon glyphicon-ok"></span><strong>Success</strong>
+                                <hr class="message-inner-separator">
+                                <p>
+                                    @ViewBag.success
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    </text>
+                    }
+                }
+                <!-- for jquery server side form verification -->
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
                 <div class="row">
                     <div class="col-xs-4 col-md-4 form-group">
-                        <input class="form-control" id="name" name="name" placeholder="Name" type="text" required autofocus />
+                        @Html.TextBoxFor(model => model.Name, new { id = "name", type = "text", placeholder = "e.g. Richard David", @class = "form-control", required = "", autofocus = "" })
+                        @Html.ValidationMessageFor(model => model.Name)
                     </div>
                     <div class="col-xs-4 col-md-4 form-group">
-                        <input class="form-control" id="email" name="email" placeholder="Email" type="email" required />
+                        @Html.TextBoxFor(model => model.email, new { id = "email", type = "email", placeholder = "e.g. example@domain.com", @class = "form-control", required = "" })
+                        @Html.ValidationMessageFor(model => model.email)
                     </div>
                 </div>
-                <textarea class="form-control" id="message" name="message" placeholder="Message" rows="3"></textarea>
+                @Html.TextAreaFor(model => model.message, new { id = "message", placeholder = "Message", @class = "form-control", rows = "3" })
+                @Html.ValidationMessageFor(model => model.message)
                 <br />
                 <div class="row">
                     <div class="col-xs-12 col-md-12 form-group">
